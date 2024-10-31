@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Http\Response;
 class AuthController extends Controller
 {
     // Registration
@@ -18,13 +18,24 @@ class AuthController extends Controller
             $validatedData = $request->validate([
                 'name' => 'required|string',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:6',
+                'password' => 'required|string|min:8',
             ]);
 
             $validatedData['password'] = Hash::make($validatedData['password']);
             $user = User::create($validatedData);
             $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['access_token' => $token], 201);
+            $get_user = User::where('id', $user->id)->first();
+
+            $response = [
+                'code' => 201,
+                'status' => 'success',
+                'data' => [
+                    'access_token' => $token,
+                    'user' => $get_user
+                ]
+            ];
+
+            return response()->json($response, 201);
 
         } catch (ValidationException $e) {
             return response()->json([
@@ -38,27 +49,45 @@ class AuthController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'required|email',
-                'password' => 'required',
+                'loginInput' => 'required|string',
+                'password' => 'required|string',
             ]);
 
-            $user = User::where('email', $request->email)->first();
-
-            if (!$user || !Hash::check($request->password, $user->password)) {
+            $loginInput = $request->loginInput;
+            if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
+                $user = User::where('email', $loginInput)->first();
+            } elseif (preg_match('/^01\d{9}$/', $loginInput)) {
+                $user = User::where('mobile_number', $loginInput)->first();
+            } else {
+                $user = User::where('id', $loginInput)->first();
+            }
+            if (!$user) {
                 throw ValidationException::withMessages([
-                    'email' => ['The provided credentials are incorrect.'],
+                    'errors' => ['User not found.'],
+                ]);
+            } elseif (!Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'errors' => ['Password is incorrect.'],
                 ]);
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'data' => [
+                    'access_token' => $token,
+                    'user' => $user
+                ]
+            ];
 
-            return response()->json(['access_token' => $token], 200);
+            return response()->json($response, 200);
+
         } catch (\Throwable $e) {
             return response()->json([
                 'errors' => $e->getMessage()
             ], 422);
         }
-
     }
 
     // Logout
@@ -66,7 +95,15 @@ class AuthController extends Controller
     {
         try {
             $request->user()->tokens()->delete();
-            return response()->json(['message' => 'Logged out'], 200);
+
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'Logged out successfully'
+            ];
+
+            return response()->json($response, 200);
+
         } catch (\Throwable $e) {
             return response()->json([
                 'errors' => $e->getMessage()
@@ -79,8 +116,17 @@ class AuthController extends Controller
     {
         try {
             $user = Auth::user();
-            return response()->json(['user' => $user], 200);
 
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'data' => [
+                    'access_token' => $request->bearerToken(),
+                    'user' => $user
+                ]
+            ];
+
+            return response()->json($response, 200);
 
         } catch (\Throwable $e) {
             return response()->json([
