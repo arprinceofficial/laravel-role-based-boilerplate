@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Response;
+
 class AuthController extends Controller
 {
     // Registration
@@ -169,7 +169,9 @@ class AuthController extends Controller
             }
 
             // Send OTP
-            // $this->sendOtpToEmail($request->email, $otp);
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($request) {
+                $message->to($request->email)->subject('OTP Verification');
+            });
             // $this->sendOtpToMobileNumber($request->email, $otp);
 
             $response = [
