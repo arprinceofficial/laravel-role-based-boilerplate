@@ -25,7 +25,6 @@ class User extends Authenticatable
         'mobile_number',
         'otp_verification_code',
         'profile_image',
-        'status',
         'password',
     ];
 
@@ -35,6 +34,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'status',
         'password',
         'remember_token',
     ];
