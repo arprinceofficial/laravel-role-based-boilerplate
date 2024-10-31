@@ -15,14 +15,13 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string',
+            $data = $request->validate([
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:8',
             ]);
 
-            $validatedData['password'] = Hash::make($validatedData['password']);
-            $user = User::create($validatedData);
+            $data['password'] = Hash::make($data['password']);
+            $user = User::create($data);
             $token = $user->createToken('auth_token')->plainTextToken;
             $get_user = User::where('id', $user->id)->first();
 
@@ -61,6 +60,7 @@ class AuthController extends Controller
             } else {
                 $user = User::where('id', $loginInput)->first();
             }
+
             if (!$user) {
                 throw ValidationException::withMessages([
                     'errors' => ['User not found.'],
@@ -68,6 +68,12 @@ class AuthController extends Controller
             } elseif (!Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
                     'errors' => ['Password is incorrect.'],
+                ]);
+            }
+
+            if ($user->status == 0) {
+                throw ValidationException::withMessages([
+                    'errors' => ['User is not active.'],
                 ]);
             }
 
@@ -116,6 +122,11 @@ class AuthController extends Controller
     {
         try {
             $user = Auth::user();
+            if ($user->status == 0) {
+                throw ValidationException::withMessages([
+                    'errors' => ['User is not active.'],
+                ]);
+            }
 
             $response = [
                 'code' => 200,
@@ -124,6 +135,88 @@ class AuthController extends Controller
                     'access_token' => $request->bearerToken(),
                     'user' => $user
                 ]
+            ];
+
+            return response()->json($response, 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'errors' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    // Send OTP
+    public function otpRequest(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|string',
+            ]);
+
+            $otp = rand(1000, 9999);
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                $user->otp_verification_code = $otp;
+                $user->save();
+            } else {
+                $data = [
+                    'email' => $request->email,
+                    'otp_verification_code' => $otp,
+                    'status' => 0
+                ];
+                $user = User::create($data);
+            }
+
+            // Send OTP
+            // $this->sendOtpToEmail($request->email, $otp);
+            // $this->sendOtpToMobileNumber($request->email, $otp);
+
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'OTP sent successfully'
+            ];
+
+            return response()->json($response, 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'errors' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    // Verify OTP
+    public function otpVerify(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|string',
+                'otp' => 'required|string',
+            ]);
+
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                throw ValidationException::withMessages([
+                    'errors' => ['User not found.'],
+                ]);
+            }
+
+            if ($user->otp_verification_code != $request->otp) {
+                throw ValidationException::withMessages([
+                    'errors' => ['OTP is incorrect.'],
+                ]);
+            }
+
+            $user->otp_verification_code = null;
+            $user->status = 1;
+            $user->save();
+
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'OTP verified successfully'
             ];
 
             return response()->json($response, 200);
