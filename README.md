@@ -22,14 +22,15 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 
 ## Installation
 
-1. Clone the repository
-2. Run `composer install`
-3. Create a new database
-4. Copy the `.env.example` file to `.env` and update the database credentials
-5. Run `php artisan key:generate`
-6. Run `php artisan migrate --seed`
-7. Run `php artisan serve`
-8. Visit `http://localhost:8000`
+- Clone the repository
+- Run `composer install`
+- Create a new database
+- Copy the `.env.example` file to `.env` and update the database credentials
+- Run `php artisan key:generate`
+- Run `php artisan migrate --seed`
+- Run `php artisan db:seed --class=UserSeeder`
+- Run `php artisan serve`
+- Visit `http://localhost:8000`
 
 ## Important Commands
 
