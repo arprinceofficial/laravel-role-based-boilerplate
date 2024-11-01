@@ -30,9 +30,6 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 6. Run `php artisan migrate --seed`
 7. Run `php artisan serve`
 8. Visit `http://localhost:8000`
-9. Login with the following credentials:
-    - Email: test@email.com
-    - Password: 12345678
 
 ## License
 
