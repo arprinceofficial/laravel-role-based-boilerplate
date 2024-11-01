@@ -55,11 +55,11 @@ class AuthController extends Controller
 
             $loginInput = $request->loginInput;
             if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
-                $user = User::where('email', $loginInput)->first();
+                $user = User::with('role')->where('email', $loginInput)->first();
             } elseif (preg_match('/^01\d{9}$/', $loginInput)) {
-                $user = User::where('mobile_number', $loginInput)->first();
+                $user = User::with('role')->where('mobile_number', $loginInput)->first();
             } else {
-                $user = User::where('id', $loginInput)->first();
+                $user = User::with('role')->where('id', $loginInput)->first();
             }
 
             if (!$user) {
@@ -122,7 +122,7 @@ class AuthController extends Controller
     public function currentUser(Request $request)
     {
         try {
-            $user = Auth::user();
+            $user = Auth::user()->load('role');
             if ($user->status == 0) {
                 throw ValidationException::withMessages([
                     'errors' => ['User is not active.'],
@@ -258,16 +258,19 @@ class AuthController extends Controller
                 ]);
             }
 
+            $user->role_id = 4;
             $user->status = 1;
             $user->save();
 
+            $get_user = User::with('role')->where('id', $user->id)->first();
             $token = $user->createToken('auth_token')->plainTextToken;
+
             $response = [
                 'code' => 200,
                 'status' => 'success',
                 'data' => [
                     'access_token' => $token,
-                    'user' => $user,
+                    'user' => $get_user,
                 ],
             ];
 
