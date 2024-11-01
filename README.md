@@ -29,6 +29,7 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 - Run `php artisan key:generate`
 - Run `php artisan migrate --seed`
 - Run `php artisan db:seed --class=UserSeeder`
+- Run `php artisan db:seed --class=RoleSeeder`
 - Run `php artisan serve`
 - Visit `http://localhost:8000`
 
@@ -39,6 +40,7 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 - Create a new controller with resource methods: `php artisan make:controller NameController -r`
 - Create a new migration: `php artisan make:migration create_name_table`
 - Run the migrations: `php artisan migrate` or `php artisan migrate:fresh` (drop all tables and re-run the migrations)
+- Run the specific migration: `php artisan migrate --path=/database/migrations/name_migration.php`
 - Rollback the last migration: `php artisan migrate:rollback`
 - Create a new seeder: `php artisan make:seeder NameTableSeeder`
 - Seed the database: `php artisan db:seed`
