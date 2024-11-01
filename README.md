@@ -35,6 +35,7 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 ## Important Commands
 
 - Create a new controller: `php artisan make:controller NameController`
+- Create a new controller with resource methods: `php artisan make:controller NameController -r`
 - Create a new model: `php artisan make:model Name`
 - Create a new migration: `php artisan make:migration create_name_table`
 - Run the migrations: `php artisan migrate` or `php artisan migrate:fresh` (drop all tables and re-run the migrations)
