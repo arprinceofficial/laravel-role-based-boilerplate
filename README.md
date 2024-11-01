@@ -38,8 +38,8 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 3. Create a new migration: `php artisan make:migration create_name_table`
 4. Run the migrations: `php artisan migrate` or `php artisan migrate:fresh` (drop all tables and re-run the migrations)
 5. Rollback the last migration: `php artisan migrate:rollback`
-6. Seed the database: `php artisan db:seed`
-7. Create a new seeder: `php artisan make:seeder NameTableSeeder`
+6. Create a new seeder: `php artisan make:seeder NameTableSeeder`
+7. Seed the database: `php artisan db:seed`
 8. Create a new middleware: `php artisan make:middleware NameMiddleware`
 9. Create a new request: `php artisan make:request NameRequest`
 10. Create a new resource: `php artisan make:resource NameResource`
