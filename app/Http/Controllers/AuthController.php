@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Kreait\Firebase\Auth as FirebaseAuth;
 
 class AuthController extends Controller
 {
@@ -219,6 +220,55 @@ class AuthController extends Controller
                 'code' => 200,
                 'status' => 'success',
                 'message' => 'OTP verified successfully'
+            ];
+
+            return response()->json($response, 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'errors' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    // ssoFirebaseLogin
+    public function ssoFirebaseLogin(Request $request)
+    {
+        try {
+            $request->validate([
+                'idToken' => 'required|string',
+            ]);
+
+            $idToken = $request->idToken;
+
+            // Access the firebase instance through the app container
+            $auth = app('firebase');
+            $verifiedIdToken = $auth->verifyIdToken($idToken);
+
+            $email = $verifiedIdToken->claims()->get('email');
+            $uid = $verifiedIdToken->claims()->get('sub');
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'email' => $verifiedIdToken->claims()->get('email'),
+                    'first_name' => $verifiedIdToken->claims()->get('name'),
+                    'password' => $uid,
+                    'profile_image' => $verifiedIdToken->claims()->get('picture'),
+                ]);
+            }
+
+            $user->status = 1;
+            $user->save();
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'data' => [
+                    'access_token' => $token,
+                    'user' => $user,
+                ],
             ];
 
             return response()->json($response, 200);

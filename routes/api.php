@@ -7,6 +7,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/otp-request', [AuthController::class, 'otpRequest']);
 Route::post('/otp-verify', [AuthController::class, 'otpVerify']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('sso-login', [AuthController::class, 'ssoFirebaseLogin']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/current-user', [AuthController::class, 'currentUser']);
