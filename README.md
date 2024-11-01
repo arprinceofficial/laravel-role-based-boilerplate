@@ -33,34 +33,35 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 
 ## Important Commands
 
-1. Create a new controller: `php artisan make:controller NameController`
-2. Create a new model: `php artisan make:model Name`
-3. Create a new migration: `php artisan make:migration create_name_table`
-4. Run the migrations: `php artisan migrate` or `php artisan migrate:fresh` (drop all tables and re-run the migrations)
-5. Rollback the last migration: `php artisan migrate:rollback`
-6. Create a new seeder: `php artisan make:seeder NameTableSeeder`
-7. Seed the database: `php artisan db:seed`
-8. Create a new middleware: `php artisan make:middleware NameMiddleware`
-9. Create a new request: `php artisan make:request NameRequest`
-10. Create a new resource: `php artisan make:resource NameResource`
-11. Create a new event: `php artisan make:event NameEvent`
-12. Create a new listener: `php artisan make:listener NameListener`
-13. Create a new job: `php artisan make:job NameJob`
-14. Create a new mail: `php artisan make:mail NameMail`
-15. Create a new notification: `php artisan make:notification NameNotification`
-16. Create a new channel: `php artisan make:channel NameChannel`
-17. Create a new factory: `php artisan make:factory NameFactory`
-18. Create a new test: `php artisan make:test NameTest`
-19. Create a new policy: `php artisan make:policy NamePolicy`
-20. Cache the routes: `php artisan route:cache`
-21. Clear the cache: `php artisan cache:clear`
-22. Create a new package: `php artisan package:make Name`
-23. Create a new command: `php artisan make:command NameCommand`
-24. Create a new provider: `php artisan make:provider NameServiceProvider`
-25. Create a new event listener: `php artisan event:generate`
-26. Create a new model factory: `php artisan make:factory NameFactory --model=Name`
-27. Create a new resource controller: `php artisan make:controller NameController --resource`
-28. Create a new resource collection: `php artisan make:resource NameCollection`
+- Create a new controller: `php artisan make:controller NameController`
+- Create a new model: `php artisan make:model Name`
+- Create a new migration: `php artisan make:migration create_name_table`
+- Run the migrations: `php artisan migrate` or `php artisan migrate:fresh` (drop all tables and re-run the migrations)
+- Rollback the last migration: `php artisan migrate:rollback`
+- Create a new seeder: `php artisan make:seeder NameTableSeeder`
+- Seed the database: `php artisan db:seed`
+- Seed the database using the class name: `php artisan db:seed --class=NameTableSeeder`
+- Create a new factory: `php artisan make:factory NameFactory`
+- Create a new model factory: `php artisan make:factory NameFactory --model=Name`
+- Create a new middleware: `php artisan make:middleware NameMiddleware`
+- Create a new request: `php artisan make:request NameRequest`
+- Create a new resource: `php artisan make:resource NameResource`
+- Create a new event: `php artisan make:event NameEvent`
+- Create a new listener: `php artisan make:listener NameListener`
+- Create a new job: `php artisan make:job NameJob`
+- Create a new mail: `php artisan make:mail NameMail`
+- Create a new notification: `php artisan make:notification NameNotification`
+- Create a new channel: `php artisan make:channel NameChannel`
+- Create a new test: `php artisan make:test NameTest`
+- Create a new policy: `php artisan make:policy NamePolicy`
+- Cache the routes: `php artisan route:cache`
+- Clear the cache: `php artisan cache:clear`
+- Create a new package: `php artisan package:make Name`
+- Create a new command: `php artisan make:command NameCommand`
+- Create a new provider: `php artisan make:provider NameServiceProvider`
+- Create a new event listener: `php artisan event:generate`
+- Create a new resource controller: `php artisan make:controller NameController --resource`
+- Create a new resource collection: `php artisan make:resource NameCollection`
 
 ## License
 
