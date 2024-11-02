@@ -14,7 +14,6 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 - User registration
 - User login
 - Social login (Firebase)
-- User profile
 - Admin management
 - User management
 - Role management
