@@ -259,13 +259,13 @@ class AuthController extends Controller
                 ]);
 
                 $user->role_id = 3;
-                // $user->save();
-                $user->load('role.permissions');
+                $user->save();
             }
 
             $user->status = 1;
             $user->save();
             $token = $user->createToken('auth_token')->plainTextToken;
+            $user->load('role.permissions');
 
             $response = [
                 'code' => 200,
