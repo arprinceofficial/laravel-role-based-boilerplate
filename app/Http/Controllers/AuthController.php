@@ -85,7 +85,7 @@ class AuthController extends Controller
                 'data' => [
                     'access_token' => $token,
                     'user' => $user,
-                    'permissions' => $user->role->permissions->pluck('name') // Return only permission names
+                    // 'permissions' => $user->role->permissions->pluck('name') // Return only permission names
                 ]
             ];
 
