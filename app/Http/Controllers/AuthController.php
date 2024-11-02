@@ -259,7 +259,6 @@ class AuthController extends Controller
                 ]);
 
                 $user->role_id = 3;
-                $user->save();
             }
 
             $user->status = 1;
