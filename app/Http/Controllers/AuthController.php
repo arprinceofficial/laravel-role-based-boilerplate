@@ -247,22 +247,23 @@ class AuthController extends Controller
 
             $email = $verifiedIdToken->claims()->get('email');
             $uid = $verifiedIdToken->claims()->get('sub');
-            $user = User::where('email', $email)->first();
+            $user = User::with('role')->where('email', $email)->first();
 
             if (!$user) {
-                $user = User::create([
+                $user = User::with('role')->create([
                     'email' => $verifiedIdToken->claims()->get('email'),
                     'first_name' => $verifiedIdToken->claims()->get('name'),
                     'password' => $uid,
                     'profile_image' => $verifiedIdToken->claims()->get('picture'),
                 ]);
+
+                $user->role_id = 3;
+                // $user->save();
+                $user->load('role');
             }
 
-            $user->role_id = 4;
             $user->status = 1;
             $user->save();
-
-            $get_user = User::with('role')->where('id', $user->id)->first();
             $token = $user->createToken('auth_token')->plainTextToken;
 
             $response = [
@@ -270,7 +271,7 @@ class AuthController extends Controller
                 'status' => 'success',
                 'data' => [
                     'access_token' => $token,
-                    'user' => $get_user,
+                    'user' => $user,
                 ],
             ];
 

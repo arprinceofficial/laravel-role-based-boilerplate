@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('profile_image')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('role_id')->nullable()->index();
+            $table->foreignId('role_id')->nullable()->index()->default(3);
             $table->tinyInteger('status')->default(0);
             $table->rememberToken();
             $table->timestamps();

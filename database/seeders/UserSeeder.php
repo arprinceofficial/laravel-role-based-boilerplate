@@ -24,6 +24,7 @@ class UserSeeder extends Seeder
             'mobile_number' => '01677879681',
             'password' => bcrypt('12345678'),
             'status' => 1,
+            'role_id' => 2,
         ]);
 
         // DB::table('users')->insert([
