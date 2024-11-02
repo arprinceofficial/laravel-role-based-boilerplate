@@ -55,11 +55,11 @@ class AuthController extends Controller
 
             $loginInput = $request->loginInput;
             if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
-                $user = User::with('role')->where('email', $loginInput)->first();
+                $user = User::with('role.permissions')->where('email', $loginInput)->first();
             } elseif (preg_match('/^01\d{9}$/', $loginInput)) {
-                $user = User::with('role')->where('mobile_number', $loginInput)->first();
+                $user = User::with('role.permissions')->where('mobile_number', $loginInput)->first();
             } else {
-                $user = User::with('role')->where('id', $loginInput)->first();
+                $user = User::with('role.permissions')->where('id', $loginInput)->first();
             }
 
             if (!$user) {
@@ -84,7 +84,8 @@ class AuthController extends Controller
                 'status' => 'success',
                 'data' => [
                     'access_token' => $token,
-                    'user' => $user
+                    'user' => $user,
+                    'permissions' => $user->role->permissions->pluck('name') // Return only permission names
                 ]
             ];
 
@@ -122,7 +123,7 @@ class AuthController extends Controller
     public function currentUser(Request $request)
     {
         try {
-            $user = Auth::user()->load('role');
+            $user = Auth::user()->load('role.permissions');
             if ($user->status == 0) {
                 throw ValidationException::withMessages([
                     'errors' => ['User is not active.'],
@@ -259,7 +260,7 @@ class AuthController extends Controller
 
                 $user->role_id = 3;
                 // $user->save();
-                $user->load('role');
+                $user->load('role.permissions');
             }
 
             $user->status = 1;

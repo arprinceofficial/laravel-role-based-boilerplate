@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## Laravel Role Based Access Control (RBAC)
+## Laravel Role Based Access Control (RBAC) API Boilerplate
 
 This is a simple Laravel project that demonstrates how to implement Role Based Access Control (RBAC) in Laravel. The project has two roles: Admin and User. The Admin role has full access to the application while the User role has limited access. The project has the following features:
 
@@ -15,7 +15,7 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 - User login
 - Social login (Firebase)
 - User profile
-- Admin dashboard
+- Admin management
 - User management
 - Role management
 - Permission management
@@ -30,6 +30,7 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 - Run `php artisan migrate --seed`
 - Run `php artisan db:seed --class=UserSeeder`
 - Run `php artisan db:seed --class=RoleSeeder`
+- Run `php artisan db:seed --class=PermissionsSeeder`
 - Run `php artisan serve`
 - Visit `http://localhost:8000`
 
