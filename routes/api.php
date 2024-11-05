@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -16,9 +17,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/logout', [AuthController::class, 'logout']);
 
     // Role
-    Route::post('/roles', [RoleController::class, 'index']);
-    Route::post('/roles-create', [RoleController::class, 'create']);
-    Route::post('/roles-update', [RoleController::class, 'update']);
-    Route::delete('/roles-delete/{id}', [RoleController::class, 'destroy']);
+    Route::post('/role', [RoleController::class, 'index']);
+    Route::post('/role-create', [RoleController::class, 'create']);
+    Route::post('/role-update', [RoleController::class, 'update']);
+    Route::delete('/role-delete/{id}', [RoleController::class, 'destroy']);
+
+    // Permission
+    Route::post('/permission', [PermissionController::class, 'index']);
+    Route::post('/permission-create', [PermissionController::class, 'create']);
+    Route::post('/permission-update', [PermissionController::class, 'update']);
+    Route::delete('/permission-delete/{id}', [PermissionController::class, 'destroy']);
 });
 

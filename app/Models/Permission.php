@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Permission extends Model
 {
@@ -15,4 +16,14 @@ class Permission extends Model
     {
         return $this->belongsToMany(Role::class, 'role_permission');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($permission) {
+            DB::table('role_permission')->where('permission_id', $permission->id)->delete();
+        });
+    }
+
 }
