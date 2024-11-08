@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Auth as FirebaseAuth;
 
 class AuthController extends Controller
@@ -273,6 +274,66 @@ class AuthController extends Controller
                     'access_token' => $token,
                     'user' => $user,
                 ],
+            ];
+
+            return response()->json($response, 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'errors' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    // Upload Profile Image
+    public function uploadProfileImage(Request $request)
+    {
+        try {
+            $request->validate([
+                'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $user = Auth::user();
+            $profile_image = $request->file('profile_image');
+            $profile_image_name = $user->id . uniqid() . '_' . time() . '.' . $profile_image->extension();
+            // return response()->json($profile_image_name, 200);
+            $profile_image->storeAs('profile_images', $profile_image_name, 'public');
+            $user->profile_image = $profile_image_name;
+            $user->save();
+
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'Profile image uploaded successfully',
+                'data' => $user
+            ];
+
+            return response()->json($response, 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'errors' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    // Delete Profile Image
+    public function deleteProfileImage(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $profile_image = $user->profile_image;
+            if ($profile_image) {
+                Storage::disk('public')->delete('profile_images/' . $profile_image);
+                $user->profile_image = null;
+                $user->save();
+            }
+
+            $response = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'Profile image deleted successfully',
+                'data' => $user
             ];
 
             return response()->json($response, 200);

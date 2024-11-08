@@ -15,6 +15,8 @@ Route::post('sso-login', [AuthController::class, 'ssoFirebaseLogin']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/current-user', [AuthController::class, 'currentUser']);
     Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/upload-profile-image', [AuthController::class, 'uploadProfileImage']);
+    Route::delete('/delete-profile-image', [AuthController::class, 'deleteProfileImage']);
 
     // Role
     Route::post('/role', [RoleController::class, 'index']);

@@ -26,6 +26,7 @@ This is a simple Laravel project that demonstrates how to implement Role Based A
 - Create a new database
 - Copy the `.env.example` file to `.env` and update the database credentials
 - Run `php artisan key:generate`
+- Run `php artisan storage:link`
 - Run `php artisan migrate --seed`
 - Run `php artisan db:seed --class=UserSeeder`
 - Run `php artisan db:seed --class=RoleSeeder`
