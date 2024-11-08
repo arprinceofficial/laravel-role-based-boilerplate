@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Kreait\Firebase\Auth as FirebaseAuth;
 
 class AuthController extends Controller
@@ -293,11 +295,18 @@ class AuthController extends Controller
                 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
+            // Get user and set image name
             $user = Auth::user();
             $profile_image = $request->file('profile_image');
             $profile_image_name = $user->id . uniqid() . '_' . time() . '.' . $profile_image->extension();
-            // return response()->json($profile_image_name, 200);
-            $profile_image->storeAs('profile_images', $profile_image_name, 'public');
+
+            // Compress and save image
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($profile_image);
+            $image->resize(300, 300);
+            $image->save(public_path('storage/profile_images/' . $profile_image_name));
+
+            // Save image name to database
             $user->profile_image = $profile_image_name;
             $user->save();
 
